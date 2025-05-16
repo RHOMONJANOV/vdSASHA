@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Sasha</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.12.0/dist/index.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --youtube: #ff0000;
+            --telegram: #0088cc;
+            --instagram: #e1306c;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--text);
+            line-height: 1.5;
+            background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 20%),
+            radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--gradient);
+        }
+
+        h1 {
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 2.25rem;
+            position: relative;
+            padding-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--gradient);
+            border-radius: 2px;
+        }
+
+        h3 {
+            color: var(--text);
+            margin: 2rem 0 1.25rem;
+            font-weight: 600;
+            font-size: 1.375rem;
+        }
+
+        .message-box {
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            resize: vertical;
+            min-height: 140px;
+            transition: all 0.2s;
+            background-color: var(--bg);
+            box-shadow: var(--shadow-sm);
+            padding-right: 50px;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        textarea::placeholder {
+            color: var(--text-light);
+            opacity: 0.7;
+        }
+
+        .emoji-btn {
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.2s;
+        }
+
+        .emoji-btn:hover {
+            color: var(--primary);
+        }
+
+        .emoji-picker {
+            position: absolute;
+            bottom: 60px;
+            right: 0;
+            z-index: 100;
+            display: none;
+        }
+
+        .emoji-picker.show {
+            display: block;
+        }
+
+        .send-btn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(99, 102, 241, 0.25);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        }
+
+        .send-btn:active {
+            transform: translateY(0);
+        }
+
+        .send-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                    to bottom right,
+                    rgba(255, 255, 255, 0.3),
+                    rgba(255, 255, 255, 0)
+            );
+            transform: rotate(30deg);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .send-btn:hover::after {
+            opacity: 1;
+        }
+
+        .messages-container {
+            margin-top: 2.5rem;
+            border-top: 1px solid var(--border);
+            padding-top: 2rem;
+        }
+
+        .messages-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            gap: 0.75rem;
+        }
+
+        .messages-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .messages-header h4 {
+            color: var(--text);
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .message-count {
+            background: var(--primary);
+            color: white;
+            border-radius: 9999px;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .filter-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            width: 200px;
+            transition: all 0.2s;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        #messageList {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        #messageList li {
+            background: var(--bg);
+            padding: 1.25rem;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--primary);
+            animation: fadeIn 0.4s ease-out;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        #messageList li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.1);
+        }
+
+        .message-info {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .message-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            white-space: nowrap;
+            margin-left: 1rem;
+        }
+
+        .message-content {
+            flex-grow: 1;
+            word-break: break-word;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .delete-btn, .block-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .delete-btn:hover {
+            color: var(--error);
+        }
+
+        .block-btn:hover {
+            color: var(--warning);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .social-links {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 22px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                    to bottom right,
+                    rgba(255, 255, 255, 0.3),
+                    rgba(255, 255, 255, 0)
+            );
+            transform: rotate(30deg);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .social-link:hover::after {
+            opacity: 1;
+        }
+
+        .social-link:hover {
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .youtube {
+            background: var(--youtube);
+        }
+
+        .telegram {
+            background: var(--telegram);
+        }
+
+        .instagram {
+            background: var(--instagram);
+        }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .floating-btn:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        }
+
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            transform: translateX(200%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            max-width: 350px;
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Confetti effect */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+            z-index: 999;
+            animation: confettiFall 5s linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            .container {
+                padding: 2rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            h3 {
+                font-size: 1.25rem;
+            }
+
+            .messages-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .social-links, .floating-btn {
+                bottom: 15px;
+                right: 15px;
+            }
+
+            .floating-btn {
+                left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="floating">Welcome, Sasha! 👋</h1>
+
+    <div class="message-box">
+        <h3>Messages from subscribers</h3>
+        <div class="input-container">
+            <textarea id="messageInput" placeholder="Write what kind of videos you'd like to see from me..." rows="4"></textarea>
+            <button class="emoji-btn" id="emojiBtn">😊</button>
+            <emoji-picker class="emoji-picker"></emoji-picker>
+        </div>
+        <button class="send-btn" onclick="sendMessage()">
+            <i class="fas fa-paper-plane"></i> Send Message
+        </button>
+    </div>
+
+    <div class="messages-container">
+        <div class="messages-header">
+            <div class="messages-header-left">
+                <h4>Recent Messages:</h4>
+                <div class="message-count" id="messageCounter">0</div>
+            </div>
+            <input type="text" class="filter-input" placeholder="Filter messages..." id="filterInput">
+        </div>
+        <ul id="messageList"></ul>
+    </div>
+</div>
+
+<div class="social-links">
+    <a href="https://youtube.com" class="social-link youtube" target="_blank">
+        <i class="fab fa-youtube"></i>
+    </a>
+    <a href="https://t.me/yourchannel" class="social-link telegram" target="_blank">
+        <i class="fab fa-telegram"></i>
+    </a>
+    <a href="https://instagram.com" class="social-link instagram" target="_blank">
+        <i class="fab fa-instagram"></i>
+    </a>
+</div>
+
+<button class="floating-btn" onclick="scrollToTop()">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
+<div class="notification" id="notification">
+    <i class="fas fa-check-circle"></i>
+    <span id="notificationText">Message sent successfully!</span>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.12.0/dist/index.min.js"></script>
+<script>
+    let messageCount = 0;
+    let messages = [];
+    let currentUser = generateUserId(); // Generate a unique ID for the current user
+    let blockedUsers = JSON.parse(localStorage.getItem('blockedUsers')) || [];
+
+    // Generate a unique user ID
+    function generateUserId() {
+        return 'user-' + Math.random().toString(36).substr(2, 9);
+    }
+
+    function sendMessage() {
+        const text = document.getElementById("messageInput").value.trim();
+        const counter = document.getElementById("messageCounter");
+        const notificationText = document.getElementById("notificationText");
+
+        if (text === "") {
+            showNotification("Please enter a message before sending", "error");
+            return;
+        }
+
+        const newMessage = {
+            content: text,
+            timestamp: new Date(),
+            author: currentUser,
+            authorName: "You" // This would be the username in a real app
+        };
+
+        messages.unshift(newMessage);
+        updateMessageList();
+        document.getElementById("messageInput").value = "";
+
+        // Update counter
+        messageCount = messages.filter(msg => !blockedUsers.includes(msg.author)).length;
+        counter.textContent = messageCount;
+
+        // Show success notification
+        showNotification("Message sent successfully!", "success");
+
+        // Create confetti effect
+        createConfetti();
+    }
+
+    function deleteMessage(index) {
+        const message = messages[index];
+
+        // Only allow deleting your own messages
+        if (message.author === currentUser) {
+            messages.splice(index, 1);
+            updateMessageList();
+            document.getElementById("messageCounter").textContent = messages.filter(msg => !blockedUsers.includes(msg.author)).length;
+            showNotification("Message deleted", "warning");
+        } else {
+            showNotification("You can only delete your own messages", "error");
+        }
+    }
+
+    function blockUser(userId) {
+        if (!blockedUsers.includes(userId)) {
+            blockedUsers.push(userId);
+            localStorage.setItem('blockedUsers', JSON.stringify(blockedUsers));
+            updateMessageList();
+            document.getElementById("messageCounter").textContent = messages.filter(msg => !blockedUsers.includes(msg.author)).length;
+            showNotification("User blocked", "warning");
+        }
+    }
+
+    function updateMessageList() {
+        const list = document.getElementById("messageList");
+        const filterInput = document.getElementById("filterInput").value.toLowerCase();
+        list.innerHTML = "";
+
+        const filteredMessages = messages.filter(msg => {
+            // Filter out blocked users
+            if (blockedUsers.includes(msg.author)) return false;
+
+            // Apply search filter
+            if (filterInput) {
+                return msg.content.toLowerCase().includes(filterInput);
+            }
+            return true;
+        });
+
+        filteredMessages.forEach((message, index) => {
+            const li = document.createElement("li");
+            const timeString = message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const isCurrentUser = message.author === currentUser;
+
+            li.innerHTML = `
+                <div class="message-info">
+                    <div class="message-meta">
+                        <span class="message-author" style="color: ${isCurrentUser ? 'var(--primary-dark)' : 'var(--text)'}">
+                            ${isCurrentUser ? 'You' : 'User ' + message.author.slice(-4)}}
+                        </span>
+                        <span class="message-time">${timeString}</span>
+                    </div>
+                    <div class="message-content">${message.content}</div>
+                </div>
+                <div class="message-actions">
+                    ${isCurrentUser ? `
+                        <button class="delete-btn" onclick="deleteMessage(${messages.indexOf(message)})" title="Delete message">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    ` : `
+                        <button class="block-btn" onclick="blockUser('${message.author}')" title="Block user">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    `}
+                </div>
+            `;
+            list.appendChild(li);
+        });
+    }
+
+    function showNotification(text, type = "success") {
+        const notification = document.getElementById("notification");
+        const notificationText = document.getElementById("notificationText");
+
+        notification.className = "notification";
+        notification.classList.add(type);
+        notificationText.textContent = text;
+
+        notification.classList.add("show");
+        setTimeout(() => {
+            notification.classList.remove("show");
+        }, 3000);
+    }
+
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+
+    function createConfetti() {
+        const colors = ['#6366f1', '#4f46e5', '#a5b4fc', '#10b981', '#f59e0b', '#ef4444'];
+
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.width = Math.random() * 10 + 5 + 'px';
+            confetti.style.height = Math.random() * 10 + 5 + 'px';
+            confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(confetti);
+
+            setTimeout(() => {
+                confetti.remove();
+            }, 5000);
+        }
+    }
+
+    // Initialize emoji picker
+    document.addEventListener('DOMContentLoaded', () => {
+        const picker = document.querySelector('emoji-picker');
+        const emojiBtn = document.getElementById('emojiBtn');
+        const messageInput = document.getElementById('messageInput');
+
+        emojiBtn.addEventListener('click', () => {
+            picker.classList.toggle('show');
+        });
+
+        picker.addEventListener('emoji-click', event => {
+            messageInput.value += event.detail.unicode;
+            picker.classList.remove('show');
+            messageInput.focus();
+        });
+
+        // Close emoji picker when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!emojiBtn.contains(e.target) && !picker.contains(e.target)) {
+                picker.classList.remove('show');
+            }
+        });
+
+        // Initialize filter input
+        document.getElementById('filterInput').addEventListener('input', updateMessageList);
+
+        // Add some sample messages
+        const now = new Date();
+        const sampleUsers = ['user-1234', 'user-5678', 'user-9012'];
+
+        messages = [
+            {
+                content: "Can you make more gaming content? I love your gameplay style! 🎮",
+                timestamp: new Date(now.getTime() - 3600000 * 2),
+                author: sampleUsers[0],
+                authorName: "Gamer123"
+            },
+            {
+                content: "Please create a tutorial on video editing techniques ✂️",
+                timestamp: new Date(now.getTime() - 3600000 * 4),
+                author: sampleUsers[1],
+                authorName: "VideoEditor"
+            },
+            {
+                content: "Your travel vlogs are amazing! More please! ✈️",
+                timestamp: new Date(now.getTime() - 3600000 * 6),
+                author: sampleUsers[2],
+                authorName: "TravelLover"
+            },
+            {
+                content: "Would love to see a day in your life video 📅",
+                timestamp: new Date(now.getTime() - 3600000 * 8),
+                author: sampleUsers[0],
+                authorName: "Gamer123"
+            },
+            {
+                content: "Your tech reviews are very helpful - keep them coming! 💻",
+                timestamp: new Date(now.getTime() - 3600000 * 10),
+                author: sampleUsers[1],
+                authorName: "VideoEditor"
+            }
+        ];
+
+        updateMessageList();
+        document.getElementById("messageCounter").textContent = messages.filter(msg => !blockedUsers.includes(msg.author)).length;
+    });
+</script>
+</body>
+</html>
